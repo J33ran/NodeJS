@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -27,6 +29,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(cookieParser('12345-67890-09876-54321')); // secret key
 
+// Session
+app.use(session({
+  name: 'session-id',
+  secret: '12345-67890-09876-54321',
+  saveUninitialized: true,
+  resave: true,
+  store: new FileStore()
+}));
+
+// Authentication
 var auth = require('./routes/auth');
 app.use(auth);
 // Authentication
