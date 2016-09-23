@@ -25,9 +25,14 @@ db.once('open', function () {
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+//var admin = require('./routes/admin')
 var dishes = require('./routes/dishes');
+
 var promotions = require('./routes/promotions');
 var leaders = require('./routes/leaders');
+
+var User = require('./models/user');
+
 
 var app = express();
 
@@ -39,8 +44,8 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use(cookieParser('12345-67890-09876-54321')); // secret key
 
@@ -58,9 +63,9 @@ app.use(cookieParser());
 // app.use(auth);
 
 // passport config
-var User = require('./models/user');
 app.use(passport.initialize());
 passport.use(new LocalStrategy(User.authenticate()));
+
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -69,7 +74,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
+//app.use(admin);
+var verify = require('./routes/verify');
+
+app.use(verify.verifyOrdinaryUser);
 app.use('/dishes', dishes);
+
 app.use('/promotions', promotions);
 app.use('/leaders', leaders);
 

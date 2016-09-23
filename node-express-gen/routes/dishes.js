@@ -7,19 +7,19 @@ var router = express.Router();
 router.use(bodyParser.json());
 
 router.route('/')
-.all(Verify.verifyOrdinaryUser, function(req,res,next) { 
+.all( function(req,res,next) { 
   // res.writeHead(200, { 'Content-Type': 'text/plain' });
     next();
 })
 
-.get(Verify.verifyOrdinaryUser, function(req,res,next) { 
+.get( function(req,res,next) { 
     Dishes.find({}, function (err, dish) { 
         if (err) throw err;
         res.json(dish);
     });
 })
 
-.post(Verify.verifyOrdinaryUser, function(req, res, next) {
+.post( function(req, res, next) {
     Dishes.create(req.body, function (err, dish) {
         if (err) throw err;
         console.log('Dish created!');
@@ -32,7 +32,7 @@ router.route('/')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, function(req, res, next){
+.delete( function(req, res, next){
     Dishes.remove({}, function (err, resp) {
         if (err) throw err;
         res.json(resp);
@@ -40,18 +40,18 @@ router.route('/')
 });
 
 router.route('/:dish')
-.all(Verify.verifyOrdinaryUser, function(req,res,next) {
+.all( function(req,res,next) {
     next();
 })
 
-.get(Verify.verifyOrdinaryUser, function(req,res,next){
+.get( function(req,res,next){
     Dishes.findById(req.params.dish, function (err, dish) {
         if (err) throw err;
         res.json(dish);
     });
 })
 
-.put(Verify.verifyOrdinaryUser, function(req, res, next){
+.put( function(req, res, next){
     Dishes.findByIdAndUpdate(req.params.dish, {
         $set: req.body
         }, {
@@ -62,7 +62,7 @@ router.route('/:dish')
         });
 })
 
-.delete(Verify.verifyOrdinaryUser, function(req, res, next){
+.delete( function(req, res, next){
     Dishes.findByIdAndRemove(req.params.dish, function (err, resp) {   
         if (err) throw err;
         res.json(resp);
@@ -71,14 +71,14 @@ router.route('/:dish')
 
 // Comments
 router.route('/:dish/comments')
-.get(Verify.verifyOrdinaryUser, function (req, res, next) {
+.get( function (req, res, next) {
     Dishes.findById(req.params.dish, function (err, dish) {
         if (err) throw err;
         res.json(dish.comments);
     });
 })
 
-.post(Verify.verifyOrdinaryUser, function (req, res, next) {
+.post( function (req, res, next) {
     Dishes.findById(req.params.dish, function (err, dish) {
         if (err) throw err;
         dish.comments.push(req.body);
@@ -90,7 +90,7 @@ router.route('/:dish/comments')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
+.delete( function (req, res, next) {
     Dishes.findById(req.params.dish, function (err, dish) {
         if (err) throw err;
         for (var i = (dish.comments.length - 1); i >= 0; i--) {
@@ -108,14 +108,14 @@ router.route('/:dish/comments')
 });
 
 router .route('/:dish/comments/:comment')
-.get(Verify.verifyOrdinaryUser, function (req, res, next) {
+.get( function (req, res, next) {
     Dishes.findById(req.params.dish, function (err, dish) {
         if (err) throw err;
         res.json(dish.comments.id(req.params.comment));
     });
 })
 
-.put(Verify.verifyOrdinaryUser, function (req, res, next) {
+.put( function (req, res, next) {
     // We delete the existing commment and insert the updated
     // comment as a new comment
     Dishes.findById(req.params.dish, function (err, dish) {
@@ -130,7 +130,7 @@ router .route('/:dish/comments/:comment')
     });
 })
 
-.delete(Verify.verifyOrdinaryUser, function (req, res, next) {
+.delete( function (req, res, next) {
     Dishes.findById(req.params.dish, function (err, dish) {
         dish.comments.id(req.params.comment).remove();
         dish.save(function (err, resp) {
