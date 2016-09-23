@@ -13,7 +13,7 @@ var config = require('./config');
 
 // // Mongoose connection
 var mongoose = require('mongoose');
-mongoose.connect(config.url);
+mongoose.connect(config.mongoUrl);
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
